@@ -1,0 +1,36 @@
+# Full example: exposes the light bar to Home Assistant over WiFi + native API.
+# Needs a secrets.yaml alongside it (see secrets.yaml.example).
+esphome:
+  name: xiaomi-lightbar
+
+external_components:
+  - source:
+      type: local
+      path: ../components
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+ota:
+  - platform: esphome
+
+logger:
+
+light:
+  - platform: xiaomi_lightbar
+    id: desk_light
+    name: "Desk Lightbar"
+    restore_mode: ALWAYS_ON
+    serial: 0xABCDEF
+    ce_pin: 4
+    csn_pin: 5
+    sck_pin: 18
+    miso_pin: 19
+    mosi_pin: 23

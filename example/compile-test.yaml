@@ -1,0 +1,25 @@
+# Minimal config to verify the component compiles (no WiFi/secrets needed).
+esphome:
+  name: lightbar-compile-test
+
+external_components:
+  - source:
+      type: local
+      path: ../components
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+light:
+  - platform: xiaomi_lightbar
+    name: "Desk Lightbar"
+    serial: 0xABCDEF
+    ce_pin: 4
+    csn_pin: 5
+    sck_pin: 18
+    miso_pin: 19
+    mosi_pin: 23
