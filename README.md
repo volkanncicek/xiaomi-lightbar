@@ -138,7 +138,7 @@ If you build on this, these are the traps that cost time (all handled here):
 
 - Control only. The bar sends nothing back, so Home Assistant shows the last command, not the bar's real state; if they drift, toggle once to re-sync.
 - The occasional command is dropped over the one-way radio (more so on cheap clone modules and at distance). The bar's own remote has the same trait.
-- Keeping the original rotary remote alive alongside Home Assistant needs the remote's own serial, obtained by sniffing it. Reliable sniffing needs clean reception, which a +PA/LNA clone at close range does not provide; a plain module is needed for that.
+- Keeping the original rotary remote alive alongside Home Assistant needs the remote's own serial, obtained by sniffing it. [lightbar2mqtt](https://github.com/ebinf/lightbar2mqtt) does that on the same hardware: flashed with no remote registered, it logs `Ignoring package with unknown serial: 0x...` on serial for every press of the remote. Reliable sniffing needs clean reception, which a +PA/LNA clone at close range does not provide; a plain module is needed for that.
 
 ## Credits
 
