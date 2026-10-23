@@ -19,6 +19,7 @@ This is, as far as I know, the first ESPHome component for this bar. It also shi
 - An ESP32 board.
 - An **nRF24L01+** module (see the note below).
 - Female-to-female jumper wires (7 for the radio).
+- ESPHome. CI compiles against the version pinned in `uv.lock`; older releases are untested.
 
 ### nRF24 module note
 
