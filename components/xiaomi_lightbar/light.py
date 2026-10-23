@@ -54,4 +54,5 @@ async def to_code(config):
 
     # RF24 talks over SPI but doesn't declare it; ESPHome won't pull it in, so add both.
     cg.add_library("SPI", None)
-    cg.add_library("nrf24/RF24", None)
+    # Before 1.6 RF24 has no ESP-IDF support and tries to build its Raspberry Pi pigpio backend.
+    cg.add_library("nrf24/RF24", "^1.6.0")
