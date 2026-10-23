@@ -1,0 +1,46 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Check the tag against the version being released
+        run: |
+          tagged="${GITHUB_REF_NAME#v}"
+          declared="$(uv run python -c 'import tomllib, pathlib; print(tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"])')"
+          if [ "$tagged" != "$declared" ]; then echo "Tag $GITHUB_REF_NAME does not match the declared version $declared"; exit 1; fi
+      # The compile workflow runs on branch pushes too, but a tag can point at a commit it never checked.
+      - uses: actions/cache@v6
+        with:
+          path: ~/.platformio
+          key: platformio-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+      - run: uv run --locked esphome compile example/compile-test.yaml
+
+  github-release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="## [$version]" 'index($0,v)==1{f=1;next} f&&(/^## \[/||/^\[[^]]+\]: /){exit} f' CHANGELOG.md | awk 'NF{p=1} p' > notes.md
+          # An empty section means the tag and the CHANGELOG disagree; fail rather than publish a release with no notes.
+          if [ ! -s notes.md ]; then echo "CHANGELOG.md has no section for $version"; exit 1; fi
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
