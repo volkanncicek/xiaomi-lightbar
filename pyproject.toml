@@ -1,6 +1,7 @@
 [project]
 name = "xiaomi-lightbar"
 version = "0.1.0"
+description = "ESPHome light component for the Xiaomi monitor light bar (MJGJD01YL) over an nRF24 radio"
 requires-python = ">=3.13"
 dependencies = []
 
