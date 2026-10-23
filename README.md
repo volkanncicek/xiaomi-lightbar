@@ -1,5 +1,7 @@
 # xiaomi-lightbar
 
+[![compile](https://github.com/volkanncicek/xiaomi-lightbar/actions/workflows/compile.yml/badge.svg)](https://github.com/volkanncicek/xiaomi-lightbar/actions/workflows/compile.yml)
+
 Control the Xiaomi Mi Computer Monitor Light Bar (MJGJD01YL) from Home Assistant, over the bar's native 2.4 GHz nRF24 radio link.
 
 The MJGJD01YL is the non-smart light bar: no WiFi, no Bluetooth, normally driven only by its bundled rotary remote. This project puts an ESP32 plus an nRF24 radio in the middle, speaks the bar's reverse-engineered protocol, and exposes it to Home Assistant as a dimmable, colour-temperature light.
@@ -139,6 +141,18 @@ If you build on this, these are the traps that cost time (all handled here):
 - Control only. The bar sends nothing back, so Home Assistant shows the last command, not the bar's real state; if they drift, toggle once to re-sync.
 - The occasional command is dropped over the one-way radio (more so on cheap clone modules and at distance). The bar's own remote has the same trait.
 - Keeping the original rotary remote alive alongside Home Assistant needs the remote's own serial, obtained by sniffing it. [lightbar2mqtt](https://github.com/ebinf/lightbar2mqtt) does that on the same hardware: flashed with no remote registered, it logs `Ignoring package with unknown serial: 0x...` on serial for every press of the remote. Reliable sniffing needs clean reception, which a +PA/LNA clone at close range does not provide; a plain module is needed for that.
+
+## Development
+
+CI validates and compiles `example/compile-test.yaml` on every push. The same check locally, with the ESPHome version pinned in `uv.lock`:
+
+```bash
+uv sync --locked
+uv run --locked esphome config example/compile-test.yaml
+uv run --locked esphome compile example/compile-test.yaml
+```
+
+On Windows, the compile fails under Git Bash, and under any shell started from it, with `MSys/Mingw is not supported`: ESPHome's ESP-IDF install refuses an MSYS environment.
 
 ## Credits
 
