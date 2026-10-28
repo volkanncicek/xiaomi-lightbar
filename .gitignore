@@ -4,3 +4,27 @@ __pycache__/
 .esphome/
 build/
 secrets.yaml
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Notes
+*.local.md
+
+# Claude Code
+.claude/settings.local.json
+.mcp.json
+.claude/settings.json
+.claude/CLAUDE.md
+
+# CodeGraph
+.codegraph/
